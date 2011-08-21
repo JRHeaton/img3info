@@ -30,19 +30,13 @@ typedef struct {
     uint32_t data_size;
 } img3_section;
 
-void print_flip_endian_32(uint32_t *value) {
-    char id[5], reverse[5];
-    id[4] = 0;
-    reverse[4] = 0;
-
-    memcpy(reverse, value, 4);
-
-    id[0] = reverse[3];
-    id[1] = reverse[2];
-    id[2] = reverse[1];
-    id[3] = reverse[0];
-
-    printf("%s", id);
+static inline void print_flip_endian_32(uint32_t *value) {
+#define ESWAP32(x) (((x) >> 0x18) | \
+                    (((x) >> 0x08) & 0x0000FF00) | \
+                    (((x) << 0x08) & 0x00FF0000) | \
+                    ((x) << 0x18))
+    printf("%s", ESWAP32(*value));
+#undef
 }
 
 void print_img3_header(img3_header *header) {
