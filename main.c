@@ -16,6 +16,11 @@
 
 #define IMG3_MAGIC 0x496D6733
 
+#define ESWAP32(x) (((x) >> 0x18) | \
+                    (((x) >> 0x08) & 0x0000FF00) | \
+                    (((x) << 0x08) & 0x00FF0000) | \
+                    ((x) << 0x18))
+
 typedef struct {
     uint32_t magic;
     uint32_t full_size;
@@ -31,12 +36,7 @@ typedef struct {
 } img3_section;
 
 static inline void print_flip_endian_32(uint32_t *value) {
-#define ESWAP32(x) (((x) >> 0x18) | \
-                    (((x) >> 0x08) & 0x0000FF00) | \
-                    (((x) << 0x08) & 0x00FF0000) | \
-                    ((x) << 0x18))
     printf("%s", ESWAP32(*value));
-#undef
 }
 
 void print_img3_header(img3_header *header) {
